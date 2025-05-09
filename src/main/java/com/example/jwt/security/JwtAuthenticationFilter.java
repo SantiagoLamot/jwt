@@ -1,9 +1,10 @@
 package com.example.jwt.security;
 
 import java.io.IOException;
-import java.net.http.HttpHeaders;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
@@ -28,6 +29,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+         if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
+            return authHeader.substring(7);
+         }
+         return null;
     }
     
 }

@@ -1,34 +1,38 @@
 package com.example.jwt.security;
 
+import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
-@Component
+@Service
 public class JwtUtil {
-    private final String SECRET = "123321";
+    private final String SECRET = "Francocolapintoalaf1vamoslaputamadreesperoqueseascampeondelmundogenio";
 
-    public String generarToken(String username){
+    public String generarToken(UserDetails user){
+        return getToken(new HashMap<>(), user);
+    }
+    private String getToken(Map<String, Object> extraClaims, UserDetails user) {
         return Jwts.builder()
-        .setSubject(username)
-        .setIssuedAt(new Date())
-        .setExpiration(new Date(System.currentTimeMillis()+1000*60*60))
-        .signWith(SignatureAlgorithm.HS256, SECRET)
-        .compact();
+            .setClaims(extraClaims)
+            .setSubject(user.getUsername())
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + 1000*60*24))
+            .signWith(getKey(), SignatureAlgorithm.HS256)
+            .compact();
     }
-    public String extraerUsername(String token){
-        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody().getSubject();
+
+    private Key getKey() {
+        byte[] keyBytes=Decoders.BASE64.decode(SECRET);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
-    public boolean validarToken(String token, UserDetails userDetails){
-        String username = extraerUsername(token);
-        return username.equals(userDetails.getUsername())&& !estaExpirado(token);
-    }
-    private boolean estaExpirado(String token){
-        return Jwts.parser().setSigningKey(SECRET)
-        .parseClaimsJws(token).getBody().getExpiration().before(new Date());
-    }
+
 }
