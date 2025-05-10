@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +23,6 @@ public class AuthService {
 
     @Autowired
     private JwtService jwtUtil;
-    
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Autowired 
     private UsuarioRepository usuarioRepository;
@@ -50,6 +46,4 @@ public class AuthService {
         usuarioRepository.save(usuario);
         return new AuthResponse(jwtUtil.generarToken(usuario));
     }
-
-
 }
