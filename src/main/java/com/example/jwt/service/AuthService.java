@@ -13,7 +13,7 @@ import com.example.jwt.dto.AuthResponse;
 import com.example.jwt.model.Rol;
 import com.example.jwt.model.Usuario;
 import com.example.jwt.repository.UsuarioRepository;
-import com.example.jwt.security.JwtUtil;
+import com.example.jwt.security.JwtService;
 
 import lombok.RequiredArgsConstructor;
 @Service
@@ -23,7 +23,7 @@ public class AuthService {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtService jwtUtil;
     
     @Autowired
     private UserDetailsService userDetailsService;
